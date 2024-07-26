@@ -9,15 +9,23 @@ use Illuminate\Support\Facades\Http;
 
 
 
+
 class ShopifyController extends Controller
 {
-    private $shopUrl = 'f89c7c-c8.myshopify.com';
+
+
+    private   $shopUrl = config('shopify-app.shop_url');
+
+    private $apiKey = config('shopify-app.api_key');
+    private   $apiSecret = config('shopify-app.api_secret');
+
+    /*    private $shopUrl = 'https://f89c7c-c8.myshopify.com';
     private $apiKey = '22508ee2625bb2deb4c182efbc6ad4d0';
     private $apiSecret = 'b562362038f516eb7132ef63f99adb54';
-
+*/
     private function buildUrl($endpoint)
     {
-        return "https://{$this->apiKey}:{$this->apiSecret}@{$this->shopUrl}{$endpoint}";
+        return "{$this->shopUrl}{$endpoint}";
     }
 
     public function getProducts()
@@ -25,7 +33,7 @@ class ShopifyController extends Controller
         $endpoint = "/admin/api/2023-04/products.json";
         $url = $this->buildUrl($endpoint);
 
-        $response = Http::get($url);
+        $response = Http::withBasicAuth($this->apiKey, $this->apiSecret)->get($url);
 
         if ($response->successful()) {
             $products = $response->json()['products'];
@@ -47,13 +55,12 @@ class ShopifyController extends Controller
             ],
         ];
 
-        $response = Http::put($url, $productData);
+        $response = Http::withBasicAuth($this->apiKey, $this->apiSecret)->put($url, $productData);
 
-        if ($response->successful()) {
-            $updatedProduct = $response->json()['product'];
-            return $updatedProduct;
-        } else {
+        if ($response->failed()) {
             return response()->json(['error' => 'Failed to update product', 'details' => $response->json()], $response->status());
         }
+        $updatedProduct = $response->json()['product'];
+        return $updatedProduct;
     }
 }

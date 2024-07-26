@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ShopifyController;
 
 
 /*
@@ -18,7 +17,3 @@ use App\Http\Controllers\ShopifyController;
 Route::get('/', function () {
     return view('welcome');
 });
-
-
-Route::get('/products', [ShopifyController::class, 'getProducts'])->name('products.index');
-Route::put('/products/{productId}', [ShopifyController::class, 'updateProducts'])->name('products.update');
