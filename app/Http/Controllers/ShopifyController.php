@@ -30,7 +30,9 @@ class ShopifyController extends Controller
         $endpoint = "/admin/api/2023-04/products.json";
         $url = $this->buildUrl($endpoint);
 
-        $response = Http::withHeaders(['X-Shopify-Access-Token' => $this->accessToken])->get($url);
+        $response = Http::withOptions(['verify' => false])
+            ->withHeaders(['X-Shopify-Access-Token' => $this->accessToken])
+            ->get($url);
 
         if ($response->failed()) {
             return response(['success' => false, 'message' => $response->json()], $response->status());
@@ -51,8 +53,9 @@ class ShopifyController extends Controller
                 'body_html' => $request->description,
             ],
         ];
-
-        $response = Http::withHeaders(['X-Shopify-Access-Token' => $this->accessToken])->put($url, $payload);
+        $response = Http::withOptions(['verify' => false])
+            ->withHeaders(['X-Shopify-Access-Token' => $this->accessToken])
+            ->put($url, $payload);
 
         if ($response->failed()) {
             return response(['success' => false, 'message' => $response->json()], $response->status());
