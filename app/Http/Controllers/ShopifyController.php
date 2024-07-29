@@ -30,7 +30,6 @@ class ShopifyController extends Controller
         $endpoint = "/admin/api/2023-04/products.json";
         $url = $this->buildUrl($endpoint);
 
-        echo $url;
         $response = Http::withHeaders(['X-Shopify-Access-Token' => $this->accessToken])->get($url);
 
         if ($response->failed()) {
