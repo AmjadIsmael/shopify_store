@@ -30,8 +30,7 @@ class ShopifyController extends Controller
         $endpoint = "/admin/api/2023-04/products.json";
         $url = $this->buildUrl($endpoint);
 
-        $response = Http::withOptions(['verify' => false])
-            ->withHeaders(['X-Shopify-Access-Token' => $this->accessToken])
+        $response = Http::withHeaders(['X-Shopify-Access-Token' => $this->accessToken])
             ->get($url);
 
         if ($response->failed()) {
@@ -53,8 +52,7 @@ class ShopifyController extends Controller
                 'body_html' => $request->description,
             ],
         ];
-        $response = Http::withOptions(['verify' => false])
-            ->withHeaders(['X-Shopify-Access-Token' => $this->accessToken])
+        $response = Http::withHeaders(['X-Shopify-Access-Token' => $this->accessToken])
             ->put($url, $payload);
 
         if ($response->failed()) {
