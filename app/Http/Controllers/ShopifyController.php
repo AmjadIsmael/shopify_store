@@ -41,15 +41,15 @@ class ShopifyController extends Controller
         return response(['success' => true, 'data' => $products]);
     }
 
-    public function updateProduct($productId, $title, $description)
+    public function updateProduct(Request $request, $productId)
     {
         $endpoint = "/admin/api/2023-04/products/{$productId}.json";
         $url = $this->buildUrl($endpoint);
 
         $payload = [
             'product' => [
-                'title' => $title,
-                'body_html' => $description,
+                'title' => $request->title,
+                'body_html' => $request->description,
             ],
         ];
         $response = Http::withHeaders(['X-Shopify-Access-Token' => $this->accessToken])
