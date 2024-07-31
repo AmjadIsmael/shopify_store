@@ -19,7 +19,7 @@ class ShopifyController extends Controller
         // $this->apiSecret = config('shopify-app.api_secret');
         $this->accessToken = config('shopify-app.access_token');
     }
-    
+
     private function buildUrl($endpoint)
     {
         return "{$this->shopDomain}{$endpoint}";
@@ -41,15 +41,15 @@ class ShopifyController extends Controller
         return response(['success' => true, 'data' => $products]);
     }
 
-    public function updateProduct(Request $request, $productId)
+    public function updateProduct($productId, $title, $description)
     {
         $endpoint = "/admin/api/2023-04/products/{$productId}.json";
         $url = $this->buildUrl($endpoint);
 
         $payload = [
             'product' => [
-                'title' => $request->title,
-                'body_html' => $request->description,
+                'title' => $title,
+                'body_html' => $description,
             ],
         ];
         $response = Http::withHeaders(['X-Shopify-Access-Token' => $this->accessToken])
