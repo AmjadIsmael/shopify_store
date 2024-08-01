@@ -12,17 +12,11 @@ use Maltekuhr\LaravelGpt\Facades\Gpt;
 use App\GPT\Actions\TranslateText\TranslateTextGPTAction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-
-
-
 use Exception;
 
 class TranslateShopifyProduct implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-
-
 
     public function handle()
     {
