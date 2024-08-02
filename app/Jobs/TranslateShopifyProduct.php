@@ -12,9 +12,6 @@ use Maltekuhr\LaravelGpt\Facades\Gpt;
 use App\GPT\Actions\TranslateText\TranslateTextGPTAction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-
-
-
 use Exception;
 
 class TranslateShopifyProduct implements ShouldQueue
@@ -22,7 +19,12 @@ class TranslateShopifyProduct implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
 
+    protected $shopifyProductId;
 
+    public function __construct($shopifyProductId)
+    {
+        $this->shopifyProductId = $shopifyProductId;
+    }
 
     public function handle()
     {
@@ -33,15 +35,13 @@ class TranslateShopifyProduct implements ShouldQueue
 
         foreach ($products as $product) {
             try {
-                $translator = new TranslateTextGPTAction($product['title']);
-                $translatedTitle = $translator->function()($product['title']);
+                $translatedTitle = TranslateTextGPTAction::make($product['title'])->send($product['title']);
 
-                $translator = new TranslateTextGPTAction($product['body_html']);
-                $translatedDescription = $translator->function()($product['body_html']);
+                $translatedDescription = TranslateTextGPTAction::make($product['body_html'])->send($product['body_html']);
 
-                $updateResponse = $shopifyController->updateProduct(new Request([
-                    'title' => $translatedTitle,
-                    'description' => $translatedDescription,
+                $updateResponse = $shopifyController->updateProduct(new \Illuminate\Http\Request([
+                    'title' => $translatedTitle['text'],
+                    'description' => $translatedDescription['text'],
                 ]), $product['id']);
 
                 if (!$updateResponse->json()['success']) {
