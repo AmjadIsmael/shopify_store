@@ -3,20 +3,19 @@
 namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
-use App\Jobs\TranslateShopifyProduct;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Jobs\TranslateShopifyProducts;
 
 class Kernel extends ConsoleKernel
 {
     /**
      * Define the application's command schedule.
      */
-    protected function schedule(Schedule $schedule): void
-    {
-        // $schedule->command('inspire')->hourly();
-        $schedule->job(new TranslateShopifyProduct)->everyTwoHours();
-    }
 
+    protected function schedule(Schedule $schedule)
+    {
+        $schedule->job(new TranslateShopifyProducts)->everyTwoHours();
+    }
     /**
      * Register the commands for the application.
      */
