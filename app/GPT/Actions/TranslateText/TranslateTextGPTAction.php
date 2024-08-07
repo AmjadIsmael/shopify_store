@@ -7,8 +7,9 @@ use Closure;
 
 class TranslateTextGPTAction extends GPTAction
 {
+
     public function __construct(
-        protected string $text,
+        protected $product
     ) {
     }
 
@@ -19,7 +20,7 @@ class TranslateTextGPTAction extends GPTAction
      */
     public function systemMessage(): ?string
     {
-        return 'Translate the following product from English to Arabic.';
+        return 'Translate the product title and description from English to Arabic.';
     }
 
     /**
@@ -29,20 +30,10 @@ class TranslateTextGPTAction extends GPTAction
      */
     public function function(): Closure
     {
-        return function (string $text): string {
-            $openai = app('openai');
-
-            $prompt = "Translate the following text to Arabic: \"$text\"";
-
-            $response = $openai->completions()->create([
-                'model' => 'text-davinci-003',
-                'prompt' => $prompt,
-                'max_tokens' => 150,
-            ]);
-
-            $translatedText = $response['choices'][0]['text'] ?? '';
-
-            return trim($translatedText);
+        return function (): mixed {
+            return [
+                'product' => $this->product
+            ];
         };
     }
 
@@ -54,7 +45,7 @@ class TranslateTextGPTAction extends GPTAction
     public function rules(): array
     {
         return [
-            'text' => 'required|string',
+            'product' => 'required|string', // Assuming product is a string
         ];
     }
 }

@@ -3,6 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ShopifyController;
+use App\Http\Controllers\TestController;
+
+use App\GPT\Actions\TranslateText\TranslateTextGPTAction;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +20,5 @@ use App\Http\Controllers\ShopifyController;
 
 Route::get('products', [ShopifyController::class, 'getProducts']);
 Route::put('products/{productId}', [ShopifyController::class, 'updateProduct']);
+
+Route::post('/test-translate', [TestController::class, 'testTranslate']);
