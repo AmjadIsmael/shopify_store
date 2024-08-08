@@ -64,8 +64,8 @@ class TestController extends Controller
 
         $result = TranslateTextGPTAction::make($product)->send($product);
 
-        $translatedTitle = $result['title'] ?? 'Translation failed'; // Fallback if title is not present
-        $translatedDescription = $result['description'] ?? 'Translation failed'; // Fallback if description is not present
+        $translatedTitle = $result['title'] ?? 'Translation failed';
+        $translatedDescription = $result['description'] ?? 'Translation failed';
 
         return response()->json([
             'title' => $translatedTitle,
