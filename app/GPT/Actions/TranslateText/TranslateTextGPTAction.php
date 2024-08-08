@@ -45,7 +45,7 @@ class TranslateTextGPTAction extends GPTAction
     public function rules(): array
     {
         return [
-            'product' => 'required|string', // Assuming product is a string
+            'product' => 'required|array',
         ];
     }
 }

@@ -48,20 +48,28 @@ class TestController extends Controller
      */
     public function testTranslate(Request $request)
     {
-        $products = $this->getProducts();
+        $response = $this->getProducts();
+
+        if ($response->json()['success'] === false) {
+            return response()->json(['success' => false, 'message' => 'Failed to fetch products'], 500);
+        }
+
+        $products = $response->json()['data'];
 
         if (empty($products)) {
             return response()->json(['success' => false, 'message' => 'No products found'], 404);
         }
 
         $product = $products[0];
-        $title = $product['title'];
-        $description = $product['body_html'];
 
-        $action = TranslateTextGPTAction::make("Title: $title\nDescription: $description");
+        $result = TranslateTextGPTAction::make($product)->send($product);
 
-        $result = $action->send("Title: $title\nDescription: $description");
+        $translatedTitle = $result['title'] ?? 'Translation failed'; // Fallback if title is not present
+        $translatedDescription = $result['description'] ?? 'Translation failed'; // Fallback if description is not present
 
-        return response()->json($result);
+        return response()->json([
+            'title' => $translatedTitle,
+            'description' => $translatedDescription
+        ]);
     }
 }
